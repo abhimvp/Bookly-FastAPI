@@ -23,3 +23,8 @@ _ It gives us the ability to allow to build something performant while also bein
   (0:26:51) Optional Query parameters  
   (0:31:48) Request Body  
   (0:39:11) Reading and setting headers
+
+# CRUD API
+
+https://jod35.github.io/fastapi-beyond-crud-docs/site/
+Build a REST API on a Python List
