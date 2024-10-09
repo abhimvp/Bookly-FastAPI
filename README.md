@@ -160,3 +160,5 @@ INFO  [alembic.runtime.migration] Running upgrade 684bd823e198 -> dce661513ffd, 
 ```
 
 - `pip install passlib` to deal with hashed password verification
+
+# JWT Authentication
