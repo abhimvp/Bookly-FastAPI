@@ -6,6 +6,21 @@
 
 from fastapi import FastAPI
 from src.books.routes import book_router
+from contextlib import asynccontextmanager # decorator
+from src.db.main import init_db
+
+# Here we determine which code is going to run at the start of the application and which code will run at the End
+# create a decorator and define a core routine that is gng to run through the lifespan of application
+
+@asynccontextmanager    
+async def life_span(app:FastAPI):
+    print(f"server is starting ....")
+    await init_db() # init_db is a co routine we need to call it with await - as it is a async function
+    yield # determines which code/print statement is going to run at start and end of our application
+    print(f"server has been stopped .....")
+    
+
+
 
 VERSION = "v1"
 
@@ -13,6 +28,7 @@ app = FastAPI(
     title= "Bookly API",
     description= "A REST API for a book review web service",
     version= VERSION,
+    lifespan= life_span
 )
 # now this app instance can also be used to provide api version info
 
