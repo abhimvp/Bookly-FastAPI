@@ -5,7 +5,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlalchemy.ext.asyncio import AsyncEngine
 from sqlalchemy.orm import sessionmaker # this is used to create a session object
 # from sqlalchemy.ext.asyncio import async_sessionmaker
-from src.books.config import Config
+from src.config import Config
 
 
 
