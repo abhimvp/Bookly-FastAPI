@@ -75,3 +75,12 @@ Let's make our application adapt to a persistant database
   - bookly_db-# \d books `to describe the tables`
   - bookly_db-# \q `to quit the interactive psql shell`
 - Now we need to create service class - where we create all our CRUD operations logic - create service.py file in books directory
+
+# Dependency Injection
+
+- Now let's determine how we shall use our session within our path handler function & that is where concept of dependency injection comes in.
+- dependency Injection is a mechanishm that FastApi uses to allow you to share logic across all route handlers that may need it.
+- In our case we're having book service class having methods where each of these methods rely on a session object.
+  - In case we want to go ahead & share that session object across all other methods that needed & then we need to simply pass that session to all these path handlers
+  - when you're using dependency injection you're gooing to have code that's going to be relied upon by other code - so that code is what you call dependency
+  - so here dependence is going to be responsible for creating our session and then we shall use that dependence see in the function that will depend on it
