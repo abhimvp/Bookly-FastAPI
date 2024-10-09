@@ -1,8 +1,12 @@
 # Here we create the Engine Object - it's the basis which you do everything from connecting to your database to carrying out CRUD - SQL Model relies on that because it's based on SQLAlchemy
 # keeping async DB API in mind we create async engine
-from sqlmodel import create_engine , text
+from sqlmodel import create_engine , text,SQLModel
 from sqlalchemy.ext.asyncio import AsyncEngine
 from src.books.config import Config
+from src.books.models import Book
+
+
+
 
 engine = AsyncEngine(create_engine(
     url=Config.DATABASE_URL,
@@ -19,9 +23,12 @@ engine = AsyncEngine(create_engine(
 # This is where we can connect to our database and create tables
 async def init_db():
     async with engine.begin() as conn:
-        statement = text("SELECT 'hello';") # this is going to be executed as sql statement
+        # create database tables in our database
+        await conn.run_sync(SQLModel.metadata.create_all) # this is gng to scan for any Model created using SQLModel object & using that metadata it will tables
+
+        # statement = text("SELECT 'hello';") # this is going to be executed as sql statement
         # to run our statement , we create a result object 
-        result = await conn.execute(statement)
-        print(result.all())
+        # result = await conn.execute(statement)
+        # print(result.all())
         # await conn.run_sync(Config.DBModel.metadata.create_all) # this is how we create all the tables in our database
         # print("Database connected successfully")

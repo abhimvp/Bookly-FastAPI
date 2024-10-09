@@ -63,3 +63,15 @@ Let's make our application adapt to a persistant database
     - create env variable DATBASE_URL = postgres+asyncpg://username:password@localhost:port/DATABASE_NAME
   - then we install - `pip install pydantic-settings` - to read our env variable in our application - create `config.py` in books package
   - After building our pydantic model , let's install sqlmodel -`pip install sqlmodel` & also create `db` package in `src` directory
+
+## create Database models
+
+- create database model for our Book Data & create read , update , delete book objects in a real persistent psql databse
+- to check created tables locally :
+  - psql -h localhost -U postgres
+  - postgres-# \c bookly_db `to go into our database`
+  - You are now connected to database "bookly_db" as user "postgres".
+  - bookly_db-# \dt `to see the tables`
+  - bookly_db-# \d books `to describe the tables`
+  - bookly_db-# \q `to quit the interactive psql shell`
+- Now we need to create service class - where we create all our CRUD operations logic - create service.py file in books directory
