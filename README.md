@@ -84,3 +84,15 @@ Let's make our application adapt to a persistant database
   - In case we want to go ahead & share that session object across all other methods that needed & then we need to simply pass that session to all these path handlers
   - when you're using dependency injection you're gooing to have code that's going to be relied upon by other code - so that code is what you call dependency
   - so here dependence is going to be responsible for creating our session and then we shall use that dependence see in the function that will depend on it
+
+# Create User Authentication Model
+
+- creating user accounts & any application requires sort of authentication (act of letting users identify who they are within our application) and authorization (allowing users to give them access to various parts of that application based on the specific roles and permissions they have)
+- Here we need a way to perform migrations through our databases - as we have different models in different packages and it's not ideal to have lifespan events in every package - that's where `alembic` comes into picture - a tool that allows us to work with SQLAlchemy and orms that use sqlalchemy
+- what migrations help us do is to make changes to our database without having to lose data
+- let's install `alembic` - `pip install alembic`
+- Now we need to create a migration environment - it helps us run our migrations inside this migration environment , we get to create versions or files that describes the changes we've been able to do on our database with time.
+  - whenever we create a change to our database , we're going to create a migration and that migration is going to be reflected inside a file -> this file is going to be called version file -. inside that file we will have changes to the structure of database that we're suggesting - alemic helps migrate using templates - which provides it for using async db api
+  - To create migration environment - do `alembic init -t async migrations`
+  - env.py inside migrations folder is the entry point to the alemic going to be using to carry out migrations to our database
+  - `alembic.ini` is the main configuration file that alembix is gng to use to do whatever it wants to our database like write our target-database we are targeting to make changes to
