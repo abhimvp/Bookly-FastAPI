@@ -1,6 +1,6 @@
 # FastAPI-Python - 1st commit
 
-### Learning from ![Ssali Jonathan YT](https://youtu.be/TO4aQ3ghFOc?si=NYiKd6YoKTRwwiaf) FastAPI Beyond CRUD Full Course
+### Learning from [Ssali Jonathan YT](https://youtu.be/TO4aQ3ghFOc?si=NYiKd6YoKTRwwiaf) FastAPI Beyond CRUD Full Course
 
 _ How do we build web applications using FastAPI - a web framework for building web applications using python.
 _ It gives us the ability to allow to build something performant while also being simple and helpful
