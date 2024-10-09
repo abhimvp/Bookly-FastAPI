@@ -131,3 +131,32 @@ bookly_db=# \dt
 ```
 
 - `alembic_version` is what going to keep the versions of our table or versions of our migrations
+
+# User Account Creation
+
+Now lets build on top of User Authentical model , so users can create user accounts within our applications
+
+- let's create routes that are responsible for our Authentication
+- alembic revision --autogenerate -m "add password hash"
+
+```
+abhis@Tinku MINGW64 ~/Desktop/PythonDev/Bookly-FastAPI (main)
+$ alembic revision --autogenerate -m "add password hash"
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added column 'users.password_hash'
+INFO  [alembic.autogenerate.compare] Detected removed column 'users.password'
+Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\dce661513ffd_add_password_hash.py ...  done
+(env)
+abhis@Tinku MINGW64 ~/Desktop/PythonDev/Bookly-FastAPI (main)
+$ alembic upgrade head
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade 684bd823e198 -> dce661513ffd, add password hash
+(env)
+
+```
+
+- `pip install passlib` to deal with hashed password verification

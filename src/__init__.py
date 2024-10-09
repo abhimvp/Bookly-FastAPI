@@ -6,6 +6,7 @@
 
 from fastapi import FastAPI
 from src.books.routes import book_router
+from src.auth.routers import auth_router
 from contextlib import asynccontextmanager # decorator
 from src.db.main import init_db
 
@@ -18,7 +19,7 @@ async def life_span(app:FastAPI):
     await init_db() # init_db is a co routine we need to call it with await - as it is a async function
     yield # determines which code/print statement is going to run at start and end of our application
     print(f"server has been stopped .....")
-    
+
 
 
 
@@ -37,3 +38,5 @@ app.include_router(book_router, prefix=f"/api/{VERSION}/books",tags=['books'])
 
 # fastapi dev src/ - this is how we tell fastapi that our src directory is the main entry point of our application
 # It will scan for the app instance - which it will find it within our src/__init__.py 
+
+app.include_router(auth_router, prefix=f"/api/{VERSION}/auth",tags=['auth'])
