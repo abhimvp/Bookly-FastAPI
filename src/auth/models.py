@@ -16,7 +16,7 @@ class User(SQLModel,table=True):
       ) # to generate uuid for each row
      ) #defining it as SQLAlchemy field
     username: str
-    password: str
+    password_hash: str = Field(exclude=True)
     email: str
     firstname: str
     lastname: str
