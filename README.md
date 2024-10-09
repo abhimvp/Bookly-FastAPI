@@ -96,3 +96,38 @@ Let's make our application adapt to a persistant database
   - To create migration environment - do `alembic init -t async migrations`
   - env.py inside migrations folder is the entry point to the alemic going to be using to carry out migrations to our database
   - `alembic.ini` is the main configuration file that alembix is gng to use to do whatever it wants to our database like write our target-database we are targeting to make changes to
+
+## configuration on migrations
+
+- Head over to env.py in our migrations directory & import our models and point to the database that we want to target
+- we do migrations as follows - `alembic revision --autogenerate -m "init"` - alembic revision - creates a version & -m means meassage
+  - alembic revision --autogenerate -m "init"
+
+````
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added table 'users'
+INFO  [alembic.autogenerate.compare] Detected type change from VARCHAR() to Date() on 'books.published_date'
+INFO  [alembic.autogenerate.compare] Detected NULL on column 'books.created_at'
+INFO  [alembic.autogenerate.compare] Detected NULL on column 'books.updated_at'
+Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\ffd71e40a893_init.py ...  done```
+````
+
+- Above we have a version created with new users table and ignored books table as it is already present in DB provided
+- Now we need migrate our changes to db - `alembic upgrade head` - looks at our latest migration and then apply to the database
+
+```
+postgres=# \c bookly_db
+You are now connected to database "bookly_db" as user "postgres".
+bookly_db=# \dt
+              List of relations
+ Schema |      Name       | Type  |  Owner
+--------+-----------------+-------+----------
+ public | alembic_version | table | postgres
+ public | books           | table | postgres
+ public | users           | table | postgres
+(3 rows)
+```
+
+- `alembic_version` is what going to keep the versions of our table or versions of our migrations
