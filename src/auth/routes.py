@@ -8,6 +8,7 @@ from src.db.main import get_session
 from .utils import create_access_token, decode_token, verify_password
 from datetime import datetime, timedelta
 from fastapi.responses import JSONResponse
+from .dependencies import RefreshTokenBearer
 
 auth_router = APIRouter()
 user_service = UserService()
@@ -65,3 +66,18 @@ async def login_users(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Invalid email or password",
         )
+
+
+@auth_router.get("/refresh_token")
+async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer())):
+    """check if our token is expired & if it's not expired then we create a new access token with the user details that are found withing our tokenF"""
+
+    expiry_timestamp = token_details["exp"]
+    if datetime.fromtimestamp(expiry_timestamp) > datetime.now():
+        new_access_token = create_access_token(user_data=token_details["user"])
+        return JSONResponse(content={"access_token": new_access_token})
+    # print(expiry_timestamp)
+
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or expired token"
+    )

@@ -200,3 +200,7 @@ import secrets
 Upto now we've been able to give our users access to our application by providing them with tokens. We are going to be implementing a way of limiting access to those users who do not have tokens.
 
 - whenever a user makes a request to some protected endpoints in our API they'll need to `provide their token within an authorization header` and this is where `HTTP bearer authentication` comes in.
+
+## JWT Authentication (creating new access tokens)
+
+Here we will see how we can gain access tokens in case our access tokens are expired using our refresh tokens
