@@ -20,3 +20,7 @@ class UserModel(BaseModel):
     is_verified: bool
     created_at: datetime
     updated_at: datetime
+    
+class UserLoginModel(BaseModel):
+    password: str
+    email: str 

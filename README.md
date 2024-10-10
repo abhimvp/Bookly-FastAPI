@@ -162,3 +162,35 @@ INFO  [alembic.runtime.migration] Running upgrade 684bd823e198 -> dce661513ffd, 
 - `pip install passlib` to deal with hashed password verification
 
 # JWT Authentication
+
+Above we built a user-authentication model and an API endpoint for creating user accounts. Now we will build on top of that to allow users identify themselves so that they can gain access to various parts of our application.
+
+- JWt Authentication is a stateless client-side form of authentication where the users identify themselves throught the use of JWTs
+- JWT stands for JSON Web Token, a standard for transmitting claims (information) among two parties
+- JWTs are essentially credentials that contain information about a user(or anything)
+- This information is encoded in JSON format, making it human-readable. The token is also digitally signed, ensuring it's authenticity and integrity
+- A JWT contains three parts
+  - A header
+  - The Payload
+  - The signature
+- In order , these are separated by a period sign.
+  ![alt text](image-1.png)
+- How JWT Works:
+  - The user logs in to the application
+  - The server verifies the user's credentials
+  - Upon successfull login, the server generates a JWT containing user claims.
+  - For future requests, the client sends the JWT in the HTTP header.
+  - The server verifies the token's signature and payload to ensure it's valid.
+  - If the token is valid, the server processes the request; otheriwse, it rejects the request
+- Benefits of JWTs:
+  - They are compact and can be sent via URL, POST request body or headers.
+  - They are self contained.
+  - They are secure.
+  - They can be used across different domains.
+- Install pyJWt - `pip install pyjwt`
+- we can create secret token as follows :
+
+```
+import secrets
+>>> secrets.token_hex(16) # generates a heaxadecimal token and add this token in our .env file
+```
