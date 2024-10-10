@@ -194,3 +194,6 @@ Above we built a user-authentication model and an API endpoint for creating user
 import secrets
 >>> secrets.token_hex(16) # generates a heaxadecimal token and add this token in our .env file
 ```
+## JWT Authentication (HTTP Bearer Auth)
+Upto now we've been able to give our users access to our application by providing them with tokens. We are going to be implementing a way of limiting access to those users who do not have tokens.
+- whenever a user makes a request to some protected endpoints in our API they'll need to `provide their token within an authorization header` and this is where `HTTP bearer authentication` comes in.
