@@ -36,7 +36,7 @@ Build a REST API on a Python List - let's consider it as inmemory database
 - It's a good idea to structure our project that is going to grow as our project grows - This is where the `FastAPI routers` comes into picture.
 - Fast API routers allow us to make our application modular by splitting our API endpoints into modules or grouping them into modules on which you can access them using a specific prefix
 - we will be doing that by creating an object that is similar to our app instance - within that object we can be able to group API endpoints that are related together & we can put them in their own seperate module
-  ![alt text](image.png)
+  ![alt text](images/image.png)
 - `pip freeze > requirements.txt` - to load the requirements for this application in future as well with same requirements
 
 # Databases with SQLModel
@@ -174,7 +174,7 @@ Above we built a user-authentication model and an API endpoint for creating user
   - The Payload
   - The signature
 - In order , these are separated by a period sign.
-  ![alt text](image-1.png)
+  ![alt text](images/image-1.png)
 - How JWT Works:
   - The user logs in to the application
   - The server verifies the user's credentials
@@ -237,7 +237,7 @@ PONG
 It's a mechanism that is implemented in a way that we allow access to specific endpoints or specific functionalities within our application or within our API.
 
 - Let's implement user role and admin role and what their permissions look like below:
-  ![alt text](image-2.png)
+  ![alt text](images/image-2.png)
 - After creating role in userModel - `run`
 
 ```
@@ -284,12 +284,14 @@ Indexes:
 ```
 
 # Model Relationships (One to Many Relationships)
+
 - Now we need to establish relationships across the different entities that are within our application , for now we have `books` and `users` tables .
 - We will also see how we can use pydantic to serialize the data in these relationships and how we can return them on our API endpoints
 - Now we want to acheive an application where users will be able to submit books and those books that are submitted by them will be tracked back to them.
 - That means there's going to be a relationship between users and books they submit to our application
-![alt text](image-3.png)
+  ![alt text](images/image-3.png)
 - we're going to establish a relationship between users and books table and establish a foreign key on books table related to our user uid.Once we do that and also see how we can modify our endpoints or our responses so we can return data containing various relationships
+
 ```
 alembic revision --autogenerate -m "Relate users to books"
 DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
@@ -298,7 +300,7 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 INFO  [alembic.autogenerate.compare] Detected added column 'books.user_uid'
 INFO  [alembic.autogenerate.compare] Detected added foreign key (user_uid)(uid) on table books
 Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\1e1bdbc48579_relate_users_to_books.py ...  done
-(env) 
+(env)
 alembic upgrade head
 DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
@@ -306,8 +308,23 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 INFO  [alembic.runtime.migration] Running upgrade 0361983afabb -> 1e1bdbc48579, Relate users to books
 (env)
 ```
+
 ## subtopic
 
 - now let's see how relationship attributes can make it easy for us to access them using reverse relationships - what is it by the way? - it's a way we can access the user who created a certain book as well as books belong to certain user
-![alt text](image-4.png)
-![alt text](image-5.png)
+  ![alt text](images/image-4.png)
+  ![alt text](images/image-5.png)
+
+# More Model and Schema Relationships (+ 55 min - mad stuff from Ssali)
+
+- Link every user and every book to a review
+- user will be able to submit a book review and we shall keep track of the book they made the review on and as well as the comments they made
+- Every user can be able to add review to a book & we shall modify our database structure
+  ![alt text](images/image-6.png)
+- One user can make as many reviews as they want & also making reviews to book
+- One book can have many reviews
+- one to many relationship between book and reviews & user and reviews
+
+```Let's move our models to a common module in which it will accessed throught our application
+
+```
