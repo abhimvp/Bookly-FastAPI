@@ -1,11 +1,18 @@
-from fastapi import Request, status
+from typing import Any, List
+from fastapi import Request, status, Depends
 from fastapi.security import HTTPBearer
 from fastapi.security.http import (
     HTTPAuthorizationCredentials,
 )  # a special class to allow us to get protect an endpoint & make it only access when someone provides their token in the form of Bearer
 from fastapi.exceptions import HTTPException
-from .utils import decode_token
+from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.redis import token_in_blocklist
+from src.db.main import get_session
+from .utils import decode_token
+from .service import UserService
+from .models import User
+
+user_service = UserService()
 
 
 # created a dependency that will be injected into every path handler that will require an access token to allow us access to resources
@@ -90,3 +97,39 @@ class RefreshTokenBearer(TokenBearer):
                 status_code=status.HTTP_403_FORBIDDEN,
                 detail="Please provide an refresh token",
             )
+
+
+async def get_current_logged_in_user(
+    token_details: dict = Depends(AccessTokenBearer()),
+    session: AsyncSession = Depends(get_session),
+):
+    """
+    In Fast APi , we can create dependencies which will also take in other dependencies : for example
+    if we want to get a currently logged in user within our application , we create this function
+    This function will take in the token details provided via the Authorization header and extract the user from AccessBearerToken Dependency and return the current user
+    """
+    print(token_details)
+    user_email = token_details["user"]["email"]
+    # above we got the email and we need session dependency
+    user = await user_service.get_user_by_email(user_email, session)
+    return user
+
+
+class RoleChecker:
+    def __init__(self, allowed_roles: List[str]) -> None:
+        self.allowed_roles = allowed_roles
+
+    # define the main class that's going to be called each time we create objects
+    # for this specific class : RoleChecker , that we inject in those specific path handlers
+
+    def __call__(self, current_user: User = Depends(get_current_logged_in_user)) -> Any:
+        """this will check if we're providing a role when accesssing a specific endpoint
+        Here we remove *args: Any, **kwds: Any and provide a dependency and this dependency will
+        be our get_current_logged_in_user dependency"""
+        if current_user.role in self.allowed_roles:
+            return True
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You are not allowed to perform this action",
+        )

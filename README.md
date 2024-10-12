@@ -220,6 +220,7 @@ Here we will see how we can gain access tokens in case our access tokens are exp
   - Microsoft provides detailed instructions for [installing WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
   - start the Redis server like so: `sudo service redis-server start`
   - Instructions on installing [redis on windows](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/)
+
 ```
 Once Redis is running, you can test it by running redis-cli:
 
@@ -228,5 +229,56 @@ Test the connection with the ping command:
 
 127.0.0.1:6379> ping
 PONG
+
+```
+
+# Role Based Access Control (RBAC)
+
+It's a mechanism that is implemented in a way that we allow access to specific endpoints or specific functionalities within our application or within our API.
+
+- Let's implement user role and admin role and what their permissions look like below:
+  ![alt text](image-2.png)
+- After creating role in userModel - `run`
+
+```
+$ alembic revision --autogenerate -m "add roles to users"
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added column 'users.role'
+Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\0361983afabb_add_roles_to_users.py ...  done
+
+Apply the revisions to migrate to DB: -
+
+abhis@Tinku MINGW64 ~/Desktop/PythonDev/Bookly-FastAPI (main)
+$ alembic upgrade head
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade dce661513ffd -> 0361983afabb, add roles to users
+(env)
+```
+
+To confirm changes :
+
+```
+abhis@Tinku MINGW64 ~/Desktop/PythonDev/Bookly-FastAPI (main)
+$ psql -h localhost -U postgres
+postgres=# \c bookly_db
+You are now connected to database "bookly_db" as user "postgres".
+bookly_db=# \d users
+                                      Table "public.users"
+ uid           | uuid                        |           | not null |
+ username      | character varying           |           | not null |
+ email         | character varying           |           | not null |
+ firstname     | character varying           |           | not null |
+ lastname      | character varying           |           | not null |
+ is_verified   | boolean                     |           | not null |
+ created_at    | timestamp without time zone |           |          |
+ updated_at    | timestamp without time zone |           |          |
+ password_hash | character varying           |           | not null |
+ role          | character varying           |           | not null | 'user'::character varying
+Indexes:
+    "users_pkey" PRIMARY KEY, btree (uid)
 
 ```

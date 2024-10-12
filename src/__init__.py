@@ -28,7 +28,7 @@ app = FastAPI(
     title="Bookly API",
     description="A REST API for a book review web service",
     version=VERSION,
-    lifespan=life_span,
+    # lifespan=life_span,
 )
 # now this app instance can also be used to provide api version info
 
