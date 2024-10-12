@@ -328,3 +328,19 @@ INFO  [alembic.runtime.migration] Running upgrade 0361983afabb -> 1e1bdbc48579, 
 ```Let's move our models to a common module in which it will accessed throught our application
 
 ```
+- Let's create reviews model
+```
+alembic revision --autogenerate -m "add review table"
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added table 'reviews'
+Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\0cce9b3181b2_add_review_table.py ...  done
+(env) 
+ alembic upgrade head
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade 1e1bdbc48579 -> 0cce9b3181b2, add review table
+(env)
+```
