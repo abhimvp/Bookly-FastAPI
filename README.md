@@ -306,3 +306,8 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 INFO  [alembic.runtime.migration] Running upgrade 0361983afabb -> 1e1bdbc48579, Relate users to books
 (env)
 ```
+## subtopic
+
+- now let's see how relationship attributes can make it easy for us to access them using reverse relationships - what is it by the way? - it's a way we can access the user who created a certain book as well as books belong to certain user
+![alt text](image-4.png)
+![alt text](image-5.png)
