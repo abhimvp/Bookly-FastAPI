@@ -204,3 +204,29 @@ Upto now we've been able to give our users access to our application by providin
 ## JWT Authentication (creating new access tokens)
 
 Here we will see how we can gain access tokens in case our access tokens are expired using our refresh tokens
+
+## JWT Authentication ( Revoking User Tokens With Redis)
+
+- Revoke Tokens on the server side
+- we will make use of redis which is an in-memory data store to help us act as block list for the tokens that we shall revoke on our server side
+  - scenario : Internal Server Error 500 - When we try to refresh token using expired token
+- setup redis client install aioredis - which is `pip install aioredis`
+  - `aioredis` is an `asynchronous Redis client` library for Python that allows you to interact with a `Redis` database using `asyncio`. It provides both low-level and high-level APIs, making it flexible for different use cases.
+- If working on windows:
+
+  - Redis is not officially supported on Windows. However, you can install Redis on Windows for development by following the instructions below.
+
+  - To install Redis on Windows, you'll first need to enable WSL2 (Windows Subsystem for Linux). WSL2 lets you run Linux binaries natively on Windows.
+  - Microsoft provides detailed instructions for [installing WSL](https://learn.microsoft.com/en-us/windows/wsl/install)
+  - start the Redis server like so: `sudo service redis-server start`
+  - Instructions on installing [redis on windows](https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/install-redis-on-windows/)
+```
+Once Redis is running, you can test it by running redis-cli:
+
+redis-cli
+Test the connection with the ping command:
+
+127.0.0.1:6379> ping
+PONG
+
+```

@@ -3,8 +3,9 @@ from fastapi.security import HTTPBearer
 from fastapi.security.http import (
     HTTPAuthorizationCredentials,
 )  # a special class to allow us to get protect an endpoint & make it only access when someone provides their token in the form of Bearer
-from .utils import decode_token
 from fastapi.exceptions import HTTPException
+from .utils import decode_token
+from src.db.redis import token_in_blocklist
 
 
 # created a dependency that will be injected into every path handler that will require an access token to allow us access to resources
@@ -21,7 +22,22 @@ class TokenBearer(HTTPBearer):
         token_data = decode_token(token)
         if not self.token_valid(token):
             raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or expired token"
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={
+                    "error": "This token is invalid or expired",
+                    "resolution": "Please get new token",
+                },
+            )
+
+        # once we check if our token is vali above then we need to check if the token is in our blocklisrt
+
+        if await token_in_blocklist(token_data["jti"]):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail={
+                    "error": "This token is invalid or expired",
+                    "resolution": "Please get new token",
+                },
             )
 
         self.verify_token_data(token_data)
