@@ -282,3 +282,27 @@ Indexes:
     "users_pkey" PRIMARY KEY, btree (uid)
 
 ```
+
+# Model Relationships (One to Many Relationships)
+- Now we need to establish relationships across the different entities that are within our application , for now we have `books` and `users` tables .
+- We will also see how we can use pydantic to serialize the data in these relationships and how we can return them on our API endpoints
+- Now we want to acheive an application where users will be able to submit books and those books that are submitted by them will be tracked back to them.
+- That means there's going to be a relationship between users and books they submit to our application
+![alt text](image-3.png)
+- we're going to establish a relationship between users and books table and establish a foreign key on books table related to our user uid.Once we do that and also see how we can modify our endpoints or our responses so we can return data containing various relationships
+```
+alembic revision --autogenerate -m "Relate users to books"
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.autogenerate.compare] Detected added column 'books.user_uid'
+INFO  [alembic.autogenerate.compare] Detected added foreign key (user_uid)(uid) on table books
+Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\1e1bdbc48579_relate_users_to_books.py ...  done
+(env) 
+alembic upgrade head
+DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
+INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
+INFO  [alembic.runtime.migration] Will assume transactional DDL.
+INFO  [alembic.runtime.migration] Running upgrade 0361983afabb -> 1e1bdbc48579, Relate users to books
+(env)
+```

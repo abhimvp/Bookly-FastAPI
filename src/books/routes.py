@@ -16,17 +16,30 @@ book_service = BookService()
 access_token_bearer = AccessTokenBearer()
 role_checker = Depends(RoleChecker(["admin", "user"]))
 
+# user_details in API call function is a bit misleading as we return token from that dependency
+# so we rename it to token details
+
 
 @book_router.get("/", response_model=List[Book], dependencies=[role_checker])
 async def get_all_books(
     session: AsyncSession = Depends(get_session),
-    user_details=Depends(access_token_bearer),
+    token_details: dict = Depends(access_token_bearer),
 ):
-    print(user_details)
+    # print(user_details)
     # {'user': {'email': 'abhimvpuser@gmail.com', 'user_uid': '47d41d27-6a15-4889-9e10-233656724c0e'}, 'exp': 1728562046.135454, 'jti': 'daddfc82-7ee6-448c-99bc-e668b12e0b69', 'refresh': False}
     books = await book_service.get_all_books(session)
     return books
 
+@book_router.get("/user/{user_uid}", response_model=List[Book], dependencies=[role_checker])
+async def get_user_book_submissions(
+    user_uid: str,
+    session: AsyncSession = Depends(get_session),
+    token_details: dict = Depends(access_token_bearer),
+):
+    # print(user_details)
+    # {'user': {'email': 'abhimvpuser@gmail.com', 'user_uid': '47d41d27-6a15-4889-9e10-233656724c0e'}, 'exp': 1728562046.135454, 'jti': 'daddfc82-7ee6-448c-99bc-e668b12e0b69', 'refresh': False}
+    books = await book_service.get_user_books(user_uid,session)
+    return books
 
 @book_router.post(
     "/",
@@ -37,11 +50,12 @@ async def get_all_books(
 async def create_a_books(
     book_data: BookCreateModel,
     session: AsyncSession = Depends(get_session),
-    user_details=Depends(access_token_bearer),
+    token_details: dict = Depends(access_token_bearer),
 ):
     # new_book = book_data.model_dump() # Generate a dictionary representation of the model, optionally specifying which fields to include or exclude.
     # books.append(new_book)
-    new_book = await book_service.create_book(book_data, session)
+    user_id = token_details.get("user")["user_uid"]
+    new_book = await book_service.create_book(book_data, user_id, session)
     return new_book
 
 
@@ -50,7 +64,7 @@ async def create_a_books(
 async def get_book_by_id(
     book_uid: str,
     session: AsyncSession = Depends(get_session),
-    user_details=Depends(access_token_bearer),
+    token_details: dict = Depends(access_token_bearer),
 ):
     book = await book_service.get_book(book_uid, session)
     if book:
@@ -66,7 +80,7 @@ async def update_book(
     book_uid: str,
     book_update_data: BookUpdateModel,
     session: AsyncSession = Depends(get_session),
-    user_details=Depends(access_token_bearer),
+    token_details: dict = Depends(access_token_bearer),
 ):
     updated_book = await book_service.update_book(book_uid, book_update_data, session)
     if updated_book:
@@ -83,7 +97,7 @@ async def update_book(
 async def delete_book(
     book_uid: str,
     session: AsyncSession = Depends(get_session),
-    user_details=Depends(access_token_bearer),
+    token_details: dict = Depends(access_token_bearer),
 ):
     deleted_book = await book_service.delete_book(book_uid, session)
     if deleted_book:
