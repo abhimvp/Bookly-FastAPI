@@ -436,3 +436,5 @@ Path: Helps create paths, particularly for determining the location of the templ
 
 ### Adding Email Support (Password Resets)
 Now that we have verified user emails, we shall proceed to allow users reset their passwords once they have forgotten them. Now the approcah for sending and decoding user details 1n the emails is the same we shall use.
+
+test git
