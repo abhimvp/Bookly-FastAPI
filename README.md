@@ -401,3 +401,27 @@ Using middleware, we can enhance FastAPI functionalities. Here are some of the w
 - `Handling CORS:` Middleware can determine which domains are allowed to access your application's resources.
 - `Request Modification:` Middleware can modify requests by adding or altering headers before they reach the application.
 - `Response Modification:` Middleware can modify responses by providing custom headers, changing the response body, and so on.
+
+
+# Email Support 
+- Sending emails is essential for user communication, identity verification, and password resets.
+
+### FastAPI-Mail
+If you've worked with Flask, you're probably familiar with Flask-Mail, the most popular extension for adding email functionality. Flask-Mail offers a simple setup for sending emails. In FastAPI, the equivalent is FastAPI-Mail, which not only provides a similar configuration process but also supports asynchronous operations and Pydantic models.
+```
+The code snippet includes the following imports and their purposes:
+
+The imports
+
+from fastapi_mail import FastMail, ConnectionConfig, MessageSchema, MessageType
+from src.config import Config
+from pathlib import Path
+
+
+FastMail: Creates the mail object, allowing access to email-sending methods.
+ConnectionConfig: Sets up the email configuration for FastAPI-Mail.
+MessageSchema: Structures an email before sending it.
+MessageType: Specifies the type of content to send via email, such as HTML.
+Config: Imports application-specific configurations, including email settings.
+Path: Helps create paths, particularly for determining the location of the templates folder.
+```

@@ -32,3 +32,6 @@ class UserWithBookModel(UserModel):
 class UserLoginModel(BaseModel):
     password: str
     email: str
+
+class EmailModel(BaseModel):
+    addresses : List[str]

@@ -9,9 +9,11 @@ from src.auth.schemas import (
     UserModel,
     UserLoginModel,
     UserWithBookModel,
+    EmailModel,
 )
 from src.db.main import get_session
 from src.errors import UserAlreadyExists, InvalidCredentials, InvalidToken
+from src.mail import mail, create_message
 from .service import UserService
 from .utils import create_access_token, verify_password
 
@@ -30,6 +32,17 @@ role_checker = RoleChecker(["admin", "user"])
 
 REFRESH_TOKEN_EXPIRY = 2
 
+@auth_router.post("/send_mail")
+async def send_mail(emails: EmailModel):
+    emails = emails.addresses
+
+    html = "<h1>Welcome to the app</h1>"
+    subject = "Welcome to our app"
+
+    message = create_message(recipients=emails, subject=subject, body=html)
+    await mail.send_message(message)
+
+    return {"message": "Email sent successfully"}
 
 @auth_router.post(
     "/signup", response_model=UserModel, status_code=status.HTTP_201_CREATED
