@@ -425,3 +425,11 @@ MessageType: Specifies the type of content to send via email, such as HTML.
 Config: Imports application-specific configurations, including email settings.
 Path: Helps create paths, particularly for determining the location of the templates folder.
 ```
+
+### User-verification 
+- From the beginning, you’ll recall that we created a User authentication database model. In this model, we included an is_verified field to manage the activation of user accounts. We’ll now begin implementing the verification process using the email address provided by the user during signup.
+
+- User account verification is crucial because it helps prevent the creation of fake accounts. Additionally, it allows us to collect user email addresses for communication and other purposes.
+- To securely transfer data from our server to an untrusted environment, we will use ItsDangerous. ItsDangerous is a Python package that enables us to cryptographically sign data, ensuring that it has not been tampered with when received. The recipient can read the data but cannot modify it without access to the sender’s secret key.
+
+- This package will be essential for creating URL-safe tokens that we will include in the user verification links sent via email.
