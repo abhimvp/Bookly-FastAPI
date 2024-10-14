@@ -27,7 +27,7 @@ async def get_all_tags(session: AsyncSession = Depends(get_session)):
     "/",
     response_model=TagModel,
     status_code=status.HTTP_201_CREATED,
-    dependencies=[user_role_checker],
+    # dependencies=[user_role_checker],
 )
 async def add_tag(
     tag_data: TagCreateModel, session: AsyncSession = Depends(get_session)

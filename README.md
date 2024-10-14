@@ -353,3 +353,9 @@ INFO  [alembic.runtime.migration] Running upgrade 1e1bdbc48579 -> 0cce9b3181b2, 
 - ![alt text](images/image-7.png)
 - We've established a many-to-many relationship between books and tags, facilitated by the book_tags table. This table serves as an association table, linking instances from books to tags.
 - The book_tags table functions as an intermediary or association table connecting the books and tags tables in a many-to-many relationship. It consists of two primary columns: book_id, which serves as a foreign key referencing the uid column in the books table to identify the book associated with a tag, and tag_id, a foreign key referencing the uid column in the tags table to identify the tag associated with a book
+
+# Error Handling
+
+- currently we are raising exceptions using HTTPException class , this is good , but there will be usecases where we want our code base to be maintainable & want to be specific about which error occurs and when it occurs - so this will be important for people who are going to maintain our code base in the future as they will know different types of errors and what they stand for & what actions can be taken
+- in a case where we want to show that a token is invalid , we can create an exception class for that error so that users can be able to know the exact error that happened but also the backend user will know when to raise a specific error & at which time to raise that error
+- we create a expection handler a function that fastapi will use to customize the response that's going to be returned each time we get to raise an exception

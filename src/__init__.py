@@ -3,14 +3,16 @@
 # from now on we're going to access everything inside source folder
 # so we will be writing all of our app logic inside the  __init__.py
 # so our main entry point for this project is going to be our source folder
-
-from fastapi import FastAPI
+from contextlib import asynccontextmanager  # decorator
+from fastapi import FastAPI, status
 from src.books.routes import book_router
 from src.auth.routes import auth_router
 from src.reviews.routes import review_router
 from src.tags.routes import tags_router
-from contextlib import asynccontextmanager  # decorator
 from src.db.main import init_db
+from .errors import (
+register_error_handlers
+)
 
 # Here we determine which code is going to run at the start of the application and which code will run at the End
 # create a decorator and define a core routine that is gng to run through the lifespan of application
@@ -34,6 +36,10 @@ app = FastAPI(
 )
 # now this app instance can also be used to provide api version info
 
+register_error_handlers(app)
+
+
+
 app.include_router(book_router, prefix=f"/api/{VERSION}/books", tags=["books"])
 # prefix is used to define on which endpoint we're going to access all the endpoints that are related to our books
 
@@ -41,5 +47,5 @@ app.include_router(book_router, prefix=f"/api/{VERSION}/books", tags=["books"])
 # It will scan for the app instance - which it will find it within our src/__init__.py
 
 app.include_router(auth_router, prefix=f"/api/{VERSION}/auth", tags=["auth"])
-app.include_router(review_router,prefix=f"/api/{VERSION}/reviews",tags=["reviews"])
+app.include_router(review_router, prefix=f"/api/{VERSION}/reviews", tags=["reviews"])
 app.include_router(tags_router, prefix=f"/api/{VERSION}/tags", tags=["tags"])

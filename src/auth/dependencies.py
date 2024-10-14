@@ -1,16 +1,21 @@
 from typing import Any, List
-from fastapi import Request, status, Depends
+from fastapi import Request, Depends
 from fastapi.security import HTTPBearer
 from fastapi.security.http import (
     HTTPAuthorizationCredentials,
 )  # a special class to allow us to get protect an endpoint & make it only access when someone provides their token in the form of Bearer
-from fastapi.exceptions import HTTPException
 from sqlmodel.ext.asyncio.session import AsyncSession
 from src.db.redis import token_in_blocklist
 from src.db.main import get_session
+from src.db.models import User
+from src.errors import (
+    InvalidToken,
+    AccessTokenRequired,
+    RefreshTokenRequired,
+    InsufficientPermission,
+)
 from .utils import decode_token
 from .service import UserService
-from src.db.models import User
 
 user_service = UserService()
 
@@ -28,24 +33,11 @@ class TokenBearer(HTTPBearer):
         token = creds.credentials
         token_data = decode_token(token)
         if not self.token_valid(token):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail={
-                    "error": "This token is invalid or expired",
-                    "resolution": "Please get new token",
-                },
-            )
-
+            raise InvalidToken()
         # once we check if our token is vali above then we need to check if the token is in our blocklisrt
 
         if await token_in_blocklist(token_data["jti"]):
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail={
-                    "error": "This token is invalid or expired",
-                    "resolution": "Please get new token",
-                },
-            )
+            raise InvalidToken()
 
         self.verify_token_data(token_data)
 
@@ -76,10 +68,7 @@ class AccessTokenBearer(TokenBearer):
         then it's going to throw an error if we provide refresh token instead of access token
         """
         if token_data and token_data["refresh"]:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Please provide an access token",
-            )
+            raise AccessTokenRequired()
 
 
 class RefreshTokenBearer(TokenBearer):
@@ -93,10 +82,7 @@ class RefreshTokenBearer(TokenBearer):
     def verify_token_data(self, token_data: dict) -> None:
         """check if a refresh token is sent to token that requires an access token & then it's going to throw an error if we provide refresh token instead of access token"""
         if token_data and not token_data["refresh"]:
-            raise HTTPException(
-                status_code=status.HTTP_403_FORBIDDEN,
-                detail="Please provide an refresh token",
-            )
+            raise RefreshTokenRequired()
 
 
 async def get_current_logged_in_user(
@@ -129,7 +115,4 @@ class RoleChecker:
         if current_user.role in self.allowed_roles:
             return True
 
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="You are not allowed to perform this action",
-        )
+        raise InsufficientPermission()

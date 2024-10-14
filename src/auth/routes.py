@@ -1,11 +1,17 @@
 # contains API endpoints that are going to be specific to our users - Authentication
 # here we create our Fast API router - A Router Object - Similar to fast APi instance in main.py - from fastapi import APIRouter
 from datetime import datetime, timedelta
-from fastapi import APIRouter, HTTPException, status, Depends
-from sqlmodel.ext.asyncio.session import AsyncSession
+from fastapi import APIRouter, status, Depends
 from fastapi.responses import JSONResponse
-from src.auth.schemas import UserCreateModel, UserModel, UserLoginModel,UserWithBookModel
+from sqlmodel.ext.asyncio.session import AsyncSession
+from src.auth.schemas import (
+    UserCreateModel,
+    UserModel,
+    UserLoginModel,
+    UserWithBookModel,
+)
 from src.db.main import get_session
+from src.errors import UserAlreadyExists, InvalidCredentials, InvalidToken
 from .service import UserService
 from .utils import create_access_token, verify_password
 
@@ -34,10 +40,7 @@ async def create_user_account(
     email = user_data.email
     user_exists = await user_service.user_exits(email, session)
     if user_exists:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="User with this email already exists",
-        )
+        raise UserAlreadyExists()
     else:
         new_user = await user_service.create_user(user_data, session)
         return new_user
@@ -75,10 +78,7 @@ async def login_users(
                 },
             )
     else:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Invalid email or password",
-        )
+        raise InvalidCredentials()
 
 
 @auth_router.get("/refresh_token")
@@ -91,12 +91,10 @@ async def get_new_access_token(token_details: dict = Depends(RefreshTokenBearer(
         return JSONResponse(content={"access_token": new_access_token})
     # print(expiry_timestamp)
 
-    raise HTTPException(
-        status_code=status.HTTP_403_FORBIDDEN, detail="Invalid or expired token"
-    )
+    raise InvalidToken()
 
 
-@auth_router.get("/me",response_model=UserWithBookModel)
+@auth_router.get("/me", response_model=UserWithBookModel)
 async def get_current_user(
     user: UserModel = Depends(get_current_logged_in_user),
     _: bool = Depends(role_checker),
