@@ -13,6 +13,7 @@ from src.errors import (
     AccessTokenRequired,
     RefreshTokenRequired,
     InsufficientPermission,
+    AccountNotVerified,
 )
 from .utils import decode_token
 from .service import UserService
@@ -112,6 +113,9 @@ class RoleChecker:
         """this will check if we're providing a role when accesssing a specific endpoint
         Here we remove *args: Any, **kwds: Any and provide a dependency and this dependency will
         be our get_current_logged_in_user dependency"""
+        if not current_user.is_verified:
+            raise AccountNotVerified()
+
         if current_user.role in self.allowed_roles:
             return True
 

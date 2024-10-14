@@ -433,3 +433,6 @@ Path: Helps create paths, particularly for determining the location of the templ
 - To securely transfer data from our server to an untrusted environment, we will use ItsDangerous. ItsDangerous is a Python package that enables us to cryptographically sign data, ensuring that it has not been tampered with when received. The recipient can read the data but cannot modify it without access to the sender’s secret key.
 
 - This package will be essential for creating URL-safe tokens that we will include in the user verification links sent via email.
+
+### Adding Email Support (Password Resets)
+Now that we have verified user emails, we shall proceed to allow users reset their passwords once they have forgotten them. Now the approcah for sending and decoding user details 1n the emails is the same we shall use.
