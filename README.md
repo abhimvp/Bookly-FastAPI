@@ -1,5 +1,30 @@
 # FastAPI-Python
 
+`ASGI` stands for `Asynchronous Server Gateway Interface`. It's a spiritual successor to WSGI (Web Server Gateway Interface), designed to improve the way Python web applications interact with web servers, especially when dealing with asynchronous operations.
+
+### Key Concepts
+
+- `Asynchronous Programming`: ASGI enables web applications to handle multiple requests concurrently without blocking, leading to improved performance and responsiveness, especially for I/O-bound tasks (like waiting for database queries or network responses).
+- `Standard Interface:` ASGI provides a standardized way for different asynchronous web servers (like Uvicorn, Daphne) to communicate with Python web frameworks (like FastAPI, Django Channels) and applications. This promotes interoperability and flexibility.
+-`Protocol Support:` While WSGI is limited to HTTP, ASGI supports both HTTP and WebSocket protocols, making it suitable for a wider range of applications, including real-time applications and chat services.
+
+### How ASGI Works
+
+- `Request:` When a client (e.g., a web browser) sends a request to the server, the ASGI server receives it.
+- `ASGI Application:` The ASGI server passes the request to an ASGI application (your Python web application).
+- `Processing:` The ASGI application processes the request asynchronously, potentially interacting with databases, external APIs, or other services.
+- `Response:` Once the processing is complete, the ASGI application sends the response back to the ASGI server.
+- `Client:` The ASGI server forwards the response to the client.
+Benefits of ASGI
+
+- `Performance:` Improved performance and scalability, particularly for applications with high concurrency or I/O-bound operations.
+- `Flexibility:` Supports both synchronous and asynchronous applications, as well as different protocols (HTTP, WebSockets).
+- `Modernization:` Enables the use of modern asynchronous features in Python (async/await).
+- `Ecosystem:` Growing ecosystem of ASGI-compatible servers, frameworks, and libraries.
+ASGI in FastAPI
+
+--- `FastAPI is built on top of Starlette, which is an ASGI framework.` This means FastAPI applications are inherently ASGI-compatible and can take full advantage of asynchronous programming and the benefits of ASGI.
+
 ### Learning from [Ssali Jonathan YT](https://youtu.be/TO4aQ3ghFOc?si=NYiKd6YoKTRwwiaf) FastAPI Beyond CRUD Full Course
 
 _ How do we build web applications using FastAPI - a web framework for building web applications using python.
@@ -359,3 +384,20 @@ INFO  [alembic.runtime.migration] Running upgrade 1e1bdbc48579 -> 0cce9b3181b2, 
 - currently we are raising exceptions using HTTPException class , this is good , but there will be usecases where we want our code base to be maintainable & want to be specific about which error occurs and when it occurs - so this will be important for people who are going to maintain our code base in the future as they will know different types of errors and what they stand for & what actions can be taken
 - in a case where we want to show that a token is invalid , we can create an exception class for that error so that users can be able to know the exact error that happened but also the backend user will know when to raise a specific error & at which time to raise that error
 - we create a expection handler a function that fastapi will use to customize the response that's going to be returned each time we get to raise an exception
+
+# Middle Ware
+
+- Middleware are components (functions or classes) that lie between the requests and responses, allowing for the modification of requests before they are processed and responses before they are sent to clients.
+  ![alt text](images/image-8.png)
+- Each request made to the server will pass through the middleware before it is handled by the route handlers.
+- Once the server has handled the request, a response is generated and still passes through the middleware before being returned to the client.
+
+### Functions of Middleware
+
+Using middleware, we can enhance FastAPI functionalities. Here are some of the ways we can use it:
+
+- `Logging:` Middleware can modify how the server logs details of requests and responses for monitoring and debugging purposes.
+- `Authentication:` Middleware can handle authentication by verifying if the tokens or credentials provided by clients are valid before the requests reach the application.
+- `Handling CORS:` Middleware can determine which domains are allowed to access your application's resources.
+- `Request Modification:` Middleware can modify requests by adding or altering headers before they reach the application.
+- `Response Modification:` Middleware can modify responses by providing custom headers, changing the response body, and so on.

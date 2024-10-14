@@ -13,6 +13,7 @@ from src.db.main import init_db
 from .errors import (
 register_error_handlers
 )
+from .middleware import register_middleware
 
 # Here we determine which code is going to run at the start of the application and which code will run at the End
 # create a decorator and define a core routine that is gng to run through the lifespan of application
@@ -37,6 +38,7 @@ app = FastAPI(
 # now this app instance can also be used to provide api version info
 
 register_error_handlers(app)
+register_middleware(app)
 
 
 

@@ -13,7 +13,7 @@ from src.config import Config
 engine = AsyncEngine(
     create_engine(
         url=Config.DATABASE_URL,
-        echo=True,  # this is used to log all the SQL statements that are being executed
+        # echo=False,  # this is used to log all the SQL statements that are being executed
         # future=True, # this is used to use the latest features of SQLAlchemy 2.0
     )
 )
