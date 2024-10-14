@@ -328,7 +328,9 @@ INFO  [alembic.runtime.migration] Running upgrade 0361983afabb -> 1e1bdbc48579, 
 ```Let's move our models to a common module in which it will accessed throught our application
 
 ```
+
 - Let's create reviews model
+
 ```
 alembic revision --autogenerate -m "add review table"
 DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
@@ -336,7 +338,7 @@ INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
 INFO  [alembic.runtime.migration] Will assume transactional DDL.
 INFO  [alembic.autogenerate.compare] Detected added table 'reviews'
 Generating C:\Users\abhis\Desktop\PythonDev\Bookly-FastAPI\migrations\versions\0cce9b3181b2_add_review_table.py ...  done
-(env) 
+(env)
  alembic upgrade head
 DATABASE_URL: postgresql+asyncpg://postgres:postgres@localhost:5432/bookly_db
 INFO  [alembic.runtime.migration] Context impl PostgresqlImpl.
@@ -344,3 +346,10 @@ INFO  [alembic.runtime.migration] Will assume transactional DDL.
 INFO  [alembic.runtime.migration] Running upgrade 1e1bdbc48579 -> 0cce9b3181b2, add review table
 (env)
 ```
+
+- Added More routes and service methods for reviews Table
+- Add Tags table and it's routes , service methods.
+- All we have been looking at is creating one to many relationships and now let us look at a many to many relationship that we can set up. This is the relationship between books and tags. We want to use tags to group all books within many categories, we can also be able to search related books, basing on their tags. To begin, let us look at the structure that book tags will have.
+- ![alt text](images/image-7.png)
+- We've established a many-to-many relationship between books and tags, facilitated by the book_tags table. This table serves as an association table, linking instances from books to tags.
+- The book_tags table functions as an intermediary or association table connecting the books and tags tables in a many-to-many relationship. It consists of two primary columns: book_id, which serves as a foreign key referencing the uid column in the books table to identify the book associated with a tag, and tag_id, a foreign key referencing the uid column in the tags table to identify the tag associated with a book
